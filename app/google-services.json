@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "270906770781",
+    "firebase_url": "https://house-hunt-436fa.firebaseio.com",
+    "project_id": "house-hunt-436fa",
+    "storage_bucket": "house-hunt-436fa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:270906770781:android:08da7d94a6abeb987554b4",
+        "android_client_info": {
+          "package_name": "com.conestoga.househunt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "270906770781-offsgp6nh304e57vrlmejto6h71fga49.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKfgKapTTxVd8YB6Acik7zt0fEdewygOM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "270906770781-offsgp6nh304e57vrlmejto6h71fga49.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

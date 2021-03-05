@@ -1,0 +1,55 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
+
+    defaultConfig {
+        applicationId "com.conestoga.househunt"
+        minSdkVersion 16
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+
+    //Firebase
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:26.1.0')
+    // Declare the dependency for the Realtime Database library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-database'
+    //Firebase Auth
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    //Firebase Storage
+    implementation 'com.google.firebase:firebase-storage'
+
+    implementation 'com.google.android.material:material:1.2.1' // material
+    implementation 'com.balysv:material-ripple:1.0.2'                  // ripple effect
+    implementation 'com.squareup.picasso:picasso:2.71828' // image loader
+    implementation 'com.github.bumptech.glide:glide:3.7.0'// image loader
+    implementation 'com.intuit.sdp:sdp-android:1.0.6' //  sdp size unit
+    implementation 'com.mikhaellopez:circularimageview:3.2.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'// circle image view
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+}

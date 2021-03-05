@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">House Hunt</string>
+    <string name="tagline">Move to What Moves You</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="listing">My Listings</string>
+    <string name="favorite">Favorite</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="about_us">At House Hunt, We always want your experiences on our platform to be easy and fun.We provide best housing and rental service.</string>
+
+
+</resources>
