@@ -50,13 +50,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else {
             if (checkNavigationMenuItem() != 0)
             {
-//                nav_view.setCheckedItem(R.id.nav_home);
-//                fragment = new HomeFragment();
+                nav_view.setCheckedItem(R.id.nav_home);
+                fragment = new HomeFragment();
                 toolbar.setTitle(getResources().getString(R.string.app_name));
                 //replacing the fragment
-//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//                ft.replace(R.id.content_frame, fragment);
-//                ft.commit();
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, fragment);
+                ft.commit();
             }
             else {
                 if (doubleBackToExitPressedOnce) {

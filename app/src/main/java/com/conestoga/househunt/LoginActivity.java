@@ -2,7 +2,9 @@ package com.conestoga.househunt;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +18,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     Button btnLogIn;
     FirebaseAuth firebaseAuth;
     ProgressBar progressBar;
+    private static final int REQUEST_CODE = 1234;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                 String password = txtPassword.getText().toString().trim();
 
                 //Some Authentication
-                if(TextUtils.isEmpty(email)) {
+                if (TextUtils.isEmpty(email)) {
                     txtEmail.setError("Email Required.");
                     return;
                 }
@@ -85,8 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                             finish();
-                        }
-                        else {
+                        } else {
                             Toast.makeText(LoginActivity.this, "Error " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
@@ -99,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
         txtsign_up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this,SignUpActivity.class);
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(intent);
             }
         });
@@ -109,12 +113,57 @@ public class LoginActivity extends AppCompatActivity {
         txtReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this,ResetPasswordActivity.class);
+                Intent intent = new Intent(LoginActivity.this, ResetPasswordActivity.class);
                 startActivity(intent);
             }
         });
+    }
 
+    public void takevoiceinput(final View view) {
 
+        txtEmail.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_RIGHT = 2;
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() >= (txtEmail.getRight() - txtEmail.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        // your action here
+                        startVoiceRecognitionActivity();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+    }
 
+    /**
+     * Fire an intent to start the voice recognition activity.
+     */
+    private void startVoiceRecognitionActivity()
+    {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice recognition Demo...");
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    /**
+     * Handle the results from the voice recognition activity.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK)
+        {
+            // Populate the wordsList with the String values the recognition engine thought it heard
+            ArrayList<String> matches = data.getStringArrayListExtra(
+                    RecognizerIntent.EXTRA_RESULTS);
+
+            assert matches != null;
+            txtEmail.setText(matches.get(0));
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

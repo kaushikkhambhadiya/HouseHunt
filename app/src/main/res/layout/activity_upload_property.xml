@@ -88,7 +88,10 @@
                         android:singleLine="true"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                         android:textColor="@color/blue_600"
-                        android:theme="@style/EditText.Grey" />
+                        android:theme="@style/EditText.Grey"
+                        android:drawableRight="@drawable/ic_mic"
+                        android:onClick="takevoiceinput"
+                        android:drawableEnd="@drawable/ic_mic"/>
 
                     <View
                         android:layout_width="0dp"
@@ -112,7 +115,10 @@
                         android:singleLine="true"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                         android:textColor="@color/blue_600"
-                        android:theme="@style/EditText.Grey" />
+                        android:theme="@style/EditText.Grey"
+                        android:drawableRight="@drawable/ic_mic"
+                        android:onClick="takevoiceinput"
+                        android:drawableEnd="@drawable/ic_mic"/>
 
                     <View
                         android:layout_width="0dp"
@@ -136,7 +142,10 @@
                         android:singleLine="true"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                         android:textColor="@color/blue_600"
-                        android:theme="@style/EditText.Grey" />
+                        android:theme="@style/EditText.Grey"
+                        android:drawableRight="@drawable/ic_mic"
+                        android:onClick="takevoiceinput"
+                        android:drawableEnd="@drawable/ic_mic"/>
 
                     <View
                         android:layout_width="0dp"
@@ -161,7 +170,10 @@
                         android:singleLine="true"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                         android:textColor="@color/blue_600"
-                        android:theme="@style/EditText.Grey" />
+                        android:theme="@style/EditText.Grey"
+                        android:drawableRight="@drawable/ic_mic"
+                        android:onClick="takevoiceinput"
+                        android:drawableEnd="@drawable/ic_mic" />
 
                     <View
                         android:layout_width="0dp"

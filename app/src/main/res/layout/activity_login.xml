@@ -78,6 +78,9 @@
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                     android:textColor="@color/blue_600"
                     android:textStyle="bold"
+                    android:drawableRight="@drawable/ic_mic"
+                    android:onClick="takevoiceinput"
+                    android:drawableEnd="@drawable/ic_mic"
                     android:theme="@style/EditText.Grey" />
 
                 <View

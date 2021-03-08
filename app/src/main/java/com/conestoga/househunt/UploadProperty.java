@@ -12,7 +12,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.speech.RecognizerIntent;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -37,6 +39,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -68,6 +71,12 @@ public class UploadProperty extends AppCompatActivity {
     public static final int TAKE_PIC_REQUEST_CODE = 0;
     public static final int CHOOSE_PIC_REQUEST_CODE = 1;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
+
+    //voice input request codes
+    private static final int REQUEST_CODE_TYPE = 11;
+    private static final int REQUEST_CODE_AVAILABLEFOR = 12;
+    private static final int REQUEST_CODE_ADDRESS = 13;
+    private static final int REQUEST_CODE_PRICE = 14;
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -186,6 +195,24 @@ public class UploadProperty extends AppCompatActivity {
                     break;
             }
         }
+
+        if (resultCode == RESULT_OK)
+        {
+            // Populate the wordsList with the String values the recognition engine thought it heard
+            assert data != null;
+            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+            assert matches != null;
+            if (requestCode == REQUEST_CODE_TYPE){
+                txtType.setText(matches.get(0));
+            }else if (requestCode == REQUEST_CODE_AVAILABLEFOR){
+                txtAvailableFor.setText(matches.get(0));
+            }else if (requestCode == REQUEST_CODE_ADDRESS){
+                txtAddress.setText(matches.get(0));
+            }else if (requestCode == REQUEST_CODE_PRICE){
+                txtPrice.setText(matches.get(0));
+            }
+        }
     }
 
     private void UploadDetails() {
@@ -268,5 +295,49 @@ public class UploadProperty extends AppCompatActivity {
         ContentResolver contentResolver = getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(imgUri));
+    }
+
+    public void takevoiceinput(final View view) {
+
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_RIGHT = 2;
+                int Request_code = 1234;
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= (txtType.getRight() - txtType.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        // your action here
+                        if (view.getId() == R.id.txtType) {
+                            // FullName action
+                            Request_code = REQUEST_CODE_TYPE;
+                        } else if (view.getId() == R.id.txtAvailableFor) {
+                            //Email action
+                            Request_code = REQUEST_CODE_AVAILABLEFOR;
+                        } else if (view.getId() == R.id.txtAddress) {
+                            //Phone action
+                            Request_code = REQUEST_CODE_ADDRESS;
+                        }else if (view.getId() == R.id.txtPrice) {
+                            //Phone action
+                            Request_code = REQUEST_CODE_PRICE;
+                        }
+                        startVoiceRecognitionActivity(Request_code);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+    }
+
+    /**
+     * Fire an intent to start the voice recognition activity.
+     */
+    private void startVoiceRecognitionActivity(int request_code)
+    {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice recognition Demo...");
+        startActivityForResult(intent, request_code);
     }
 }

@@ -3,8 +3,10 @@ package com.conestoga.househunt;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.RecognizerIntent;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -22,6 +24,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import java.util.ArrayList;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -36,6 +40,9 @@ public class SignUpActivity extends AppCompatActivity {
     ProgressBar progressBar;
     private final String TAG = MainActivity.class.getSimpleName();
     private Handler mHandler= new Handler();
+    private static final int REQUEST_CODE_FULLNAME = 1;
+    private static final int REQUEST_CODE_EMAIL = 2;
+    private static final int REQUEST_CODE_PHONE = 3;
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -169,6 +176,70 @@ public class SignUpActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
+            }
+        });
+    }
+
+    /**
+     * Fire an intent to start the voice recognition activity.
+     */
+    private void startVoiceRecognitionActivity(int request_code)
+    {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice recognition Demo...");
+        startActivityForResult(intent, request_code);
+    }
+
+    /**
+     * Handle the results from the voice recognition activity.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (resultCode == RESULT_OK)
+        {
+            // Populate the wordsList with the String values the recognition engine thought it heard
+            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+            assert matches != null;
+            if (requestCode == REQUEST_CODE_FULLNAME){
+                txtFullName.setText(matches.get(0));
+            }else if (requestCode == REQUEST_CODE_EMAIL){
+                txtEmail.setText(matches.get(0));
+            }else if (requestCode == REQUEST_CODE_PHONE){
+                txtPhone.setText(matches.get(0));
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void takevoiceinput(final View view) {
+
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_RIGHT = 2;
+                int Request_code = 1234;
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= (txtFullName.getRight() - txtFullName.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        // your action here
+                        if (view.getId() == R.id.txtFullName) {
+                            // FullName action
+                            Request_code = REQUEST_CODE_FULLNAME;
+                        } else if (view.getId() == R.id.txtEmail) {
+                            //Email action
+                            Request_code = REQUEST_CODE_EMAIL;
+                        } else if (view.getId() == R.id.txtPhone) {
+                            //Phone action
+                            Request_code = REQUEST_CODE_PHONE;
+                        }
+                        startVoiceRecognitionActivity(Request_code);
+                        return true;
+                    }
+                }
+                return false;
             }
         });
     }
