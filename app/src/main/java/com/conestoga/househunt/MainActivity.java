@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.conestoga.househunt.Fragments.FragmentTabsFavorite;
+import com.conestoga.househunt.Fragments.FragmentTabsListing;
 import com.conestoga.househunt.MainFragments.AboutFragment;
 import com.conestoga.househunt.MainFragments.HomeFragment;
 import com.conestoga.househunt.utils.Tools;
@@ -147,11 +149,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 toolbar.setTitle(getResources().getString(R.string.app_name));
                 break;
             case R.id.nav_listing:
-//                fragment = new FragmentTabsListing();
+                fragment = new FragmentTabsListing();
                 toolbar.setTitle(menuItem.getTitle());
                 break;
             case R.id.nav_favorites:
-//                fragment = new FragmentTabsFavorite();
+                fragment = new FragmentTabsFavorite();
                 toolbar.setTitle(menuItem.getTitle());
                 break;
             case R.id.nav_chat:
