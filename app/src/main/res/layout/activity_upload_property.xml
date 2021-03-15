@@ -204,14 +204,17 @@
                         android:gravity="center"
                         android:padding="10sp">
 
-                        <ImageView
-                            android:id="@+id/imgProperty"
-                            android:layout_width="@dimen/_150sdp"
-                            android:layout_height="@dimen/_100sdp"
-                            android:layout_gravity="center"
-                            android:padding="10sp"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/logo"/>
+                        <GridView
+                            android:id="@+id/gallery"
+                            android:verticalSpacing="2dp"
+                            android:horizontalSpacing="2dp"
+                            android:numColumns="auto_fit"
+                            android:gravity="center"
+                            android:nestedScrollingEnabled="true"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scrollbars="vertical"
+                            android:fadeScrollbars="false"/>
 
                     </LinearLayout>
 

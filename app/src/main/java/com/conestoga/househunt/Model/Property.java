@@ -1,6 +1,7 @@
 package com.conestoga.househunt.Model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Property implements Serializable {
 
@@ -9,8 +10,8 @@ public class Property implements Serializable {
     private String location;
     private String available;
     private int price;
-    private String imageId;
-    private String imageFileName;
+    private ArrayList<String> propertyimages;
+
     private String offerdateandtime;
     private String dateofpost;
     private String uploader_name,uploader_email;
@@ -19,14 +20,13 @@ public class Property implements Serializable {
     public Property() {
     }
 
-    public Property(String userid, String type, String location, String available, int price, String imageId, String imageFileName, String offerdateandtime, String dateofpost, String uploader_name, String uploader_email, String uploader_profile_pic) {
+    public Property(String userid, String type, String location, String available, int price, ArrayList<String> propertyimages, String offerdateandtime, String dateofpost, String uploader_name, String uploader_email, String uploader_profile_pic) {
         this.userid = userid;
         this.type = type;
         this.location = location;
         this.available = available;
         this.price = price;
-        this.imageId = imageId;
-        this.imageFileName = imageFileName;
+        this.propertyimages = propertyimages;
         this.offerdateandtime = offerdateandtime;
         this.dateofpost = dateofpost;
         this.uploader_name = uploader_name;
@@ -74,20 +74,12 @@ public class Property implements Serializable {
         this.price = price;
     }
 
-    public String getImageId() {
-        return imageId;
+    public ArrayList<String> getPropertyimages() {
+        return propertyimages;
     }
 
-    public void setImageId(String imageId) {
-        this.imageId = imageId;
-    }
-
-    public String getImageFileName() {
-        return imageFileName;
-    }
-
-    public void setImageFileName(String imageFileName) {
-        this.imageFileName = imageFileName;
+    public void setPropertyimages(ArrayList<String> propertyimages) {
+        this.propertyimages = propertyimages;
     }
 
     public String getOfferdateandtime() {

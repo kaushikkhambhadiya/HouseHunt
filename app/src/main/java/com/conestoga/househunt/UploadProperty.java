@@ -1,7 +1,6 @@
 package com.conestoga.househunt;
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -12,15 +11,16 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.conestoga.househunt.Adapters.GalleryAdapter;
 import com.conestoga.househunt.Model.Property;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,7 +36,6 @@ import com.google.firebase.storage.UploadTask;
 import com.gun0912.tedpicker.Config;
 import com.gun0912.tedpicker.ImagePickerActivity;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -51,9 +50,8 @@ public class UploadProperty extends AppCompatActivity {
     //Variables
     EditText txtType,txtAddress,txtAvailableFor, txtPrice;
     Button btnChooseImage,btnSubmit;
-    ImageView imgProperty;
     StorageReference strRef;
-    Uri imageURI;
+    ArrayList<Uri> image_uris;
     StorageTask taskStorage;
     DatabaseReference dbRef;
     DatabaseReference dbReflisting;
@@ -61,7 +59,6 @@ public class UploadProperty extends AppCompatActivity {
     ProgressBar progressBar;
     public String imageId;
     ImageView ivback;
-    ArrayList<String> property_images;
     LinearLayout llpropertyimages;
 
     Date currentTime;
@@ -78,6 +75,9 @@ public class UploadProperty extends AppCompatActivity {
     private static final int REQUEST_CODE_PRICE = 14;
 
     private static final int INTENT_REQUEST_GET_IMAGES = 15;
+
+    private GridView gallery;
+    private GalleryAdapter galleryAdapter;
 
 
     @Override
@@ -96,12 +96,12 @@ public class UploadProperty extends AppCompatActivity {
         txtAddress = findViewById(R.id.txtAddress);
         txtPrice = findViewById(R.id.txtPrice);
         txtAvailableFor = findViewById(R.id.txtAvailableFor);
-        imgProperty = findViewById(R.id.imgProperty);
         btnChooseImage = findViewById(R.id.btnChooseImage);
         btnSubmit = findViewById(R.id.btnSubmit);
         progressBar = findViewById(R.id.progressBar);
         ivback = findViewById(R.id.ivback);
         llpropertyimages = findViewById(R.id.llpropertyimages);
+        gallery = findViewById(R.id.gallery);
 
         ivback.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,31 +165,18 @@ public class UploadProperty extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        assert data != null;
-        ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+        ArrayList<String> matches = new ArrayList<>();
+        if (data != null){
+            matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+        }
 
         if(resultCode != RESULT_CANCELED) {
             switch (requestCode) {
                 case INTENT_REQUEST_GET_IMAGES:
-                    ArrayList<Uri>  image_uris = data.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
-
-                    //do something
-                    llpropertyimages.removeAllViews();
-
-                    for (int i=0; i < image_uris.size(); i++) {
-                        ImageView imageView = new ImageView(this);
-                        //setting image position
-                        imageView.setLayoutParams(new LinearLayout.LayoutParams(R.dimen._100sdp,
-                                R.dimen._100sdp));
-                        //adding view to layout
-                        if(imageView.getParent() != null) {
-                            ((ViewGroup)imageView.getParent()).removeView(imageView); // <- fix
-                        }
-                        llpropertyimages.addView(imageView);
-                        Uri file = Uri.fromFile(new File(String.valueOf(image_uris.get(i))));
-                        Glide.with(this).load(file).into(imageView);
-                    }
-
+                    image_uris = data.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
+                    galleryAdapter=new GalleryAdapter(image_uris,this);
+                    gallery.setAdapter(galleryAdapter);
+                    setGridViewHeightBasedOnChildren( gallery , 3);
                     break;
                 case REQUEST_CODE_TYPE:
                     txtType.setText(matches.get(0));
@@ -213,7 +200,7 @@ public class UploadProperty extends AppCompatActivity {
             Toast.makeText(this, "Is in progress!", Toast.LENGTH_SHORT).show();
         }
         else {
-            progressBar.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
             ImageUploader();
         }
     }
@@ -233,60 +220,94 @@ public class UploadProperty extends AppCompatActivity {
 
         if (type.isEmpty() || address.isEmpty() || available.isEmpty() || price.isEmpty()){
             Toast.makeText(this,"All Field is Required!",Toast.LENGTH_LONG).show();
-        } else if (imageURI == null){
+        } else if (image_uris == null || image_uris.size() == 0){
             Toast.makeText(this,"Please Upload Property Picture!",Toast.LENGTH_LONG).show();
         } else {
-            imageId = System.currentTimeMillis() + "." + findExtension(imageURI);
+
             objProperty.setUserid(user.getUid());
             objProperty.setType(type);
             objProperty.setLocation(address);
             objProperty.setAvailable(available);
             objProperty.setPrice(Integer.parseInt(price));
-            objProperty.setImageFileName(imageId);
             objProperty.setDateofpost(date);
             objProperty.setUploader_name(user.getDisplayName());
             objProperty.setUploader_profile_pic(String.valueOf(user.getPhotoUrl()));
             objProperty.setUploader_email(user.getEmail());
 
-            StorageReference refStorage = strRef.child(imageId);
-            taskStorage = refStorage.putFile(imageURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    final Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
-                    while (!urlTask.isSuccessful());
-                    final Uri taskResult = urlTask.getResult();
-                    final String downloadUrl = taskResult.toString();
+            final ArrayList<String> image_list = new ArrayList<>();
+            for (int i =0 ; i < image_uris.size(); i++) {
+                Uri uri = Uri.parse("file://"+image_uris.get(i));
+                final StorageReference ref = strRef.child(uri.getLastPathSegment());
+                ref.putFile(uri)
+                        .addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                final Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                                while (!urlTask.isSuccessful());
+                                final Uri taskResult = urlTask.getResult();
+                                final String downloadUrl = taskResult.toString();
+                                image_list.add(downloadUrl);
 
-                    objProperty.setImageId(downloadUrl);
+                                if (image_list.size() == image_uris.size()) {
 
-                    dbReflisting.push().setValue(objProperty).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            progressBar.setVisibility(View.VISIBLE);
-                            Log.i("Listing","Complete");
-                        }
-                    });
+                                    objProperty.setPropertyimages(image_list);
 
-                    dbRef.push().setValue(objProperty).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            progressBar.setVisibility(View.VISIBLE);
-                            Toast.makeText(UploadProperty.this, "Upload Complete!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(UploadProperty.this, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                            finish();
-                        }
-                    });
-                }
-            });
+                                    dbReflisting.push().setValue(objProperty).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            progressBar.setVisibility(View.VISIBLE);
+                                            progressBar.setVisibility(View.GONE);
+                                        }
+                                    });
+
+                                    dbRef.push().setValue(objProperty).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            progressBar.setVisibility(View.GONE);
+                                            Toast.makeText(UploadProperty.this, "Upload Complete!", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(UploadProperty.this, MainActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    });
+
+                                }
+                            }
+                        });
+            }
+//            StorageReference refStorage = strRef.child(imageId);
+//            taskStorage = refStorage.putFile(imageURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                @Override
+//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                    final Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+//                    while (!urlTask.isSuccessful());
+//                    final Uri taskResult = urlTask.getResult();
+//                    final String downloadUrl = taskResult.toString();
+//
+//                    objProperty.setImageId(downloadUrl);
+//
+//                    dbReflisting.push().setValue(objProperty).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Void> task) {
+//                            progressBar.setVisibility(View.VISIBLE);
+//                            Log.i("Listing","Complete");
+//                        }
+//                    });
+//
+//                    dbRef.push().setValue(objProperty).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Void> task) {
+//                            progressBar.setVisibility(View.VISIBLE);
+//                            Toast.makeText(UploadProperty.this, "Upload Complete!", Toast.LENGTH_SHORT).show();
+//                            Intent intent = new Intent(UploadProperty.this, MainActivity.class);
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            startActivity(intent);
+//                            finish();
+//                        }
+//                    });
+//                }
+//            });
         }
-    }
-
-    private String findExtension(Uri imgUri) {
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(imgUri));
     }
 
     public void takevoiceinput(final View view) {
@@ -331,5 +352,33 @@ public class UploadProperty extends AppCompatActivity {
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice recognition Demo...");
         startActivityForResult(intent, request_code);
+    }
+
+    public void setGridViewHeightBasedOnChildren(GridView gridView, int columns) {
+        ListAdapter listAdapter = gridView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = 0;
+        int items = listAdapter.getCount();
+        int rows = 0;
+
+        View listItem = listAdapter.getView(0, null, gridView);
+        listItem.measure(0, 0);
+        totalHeight = listItem.getMeasuredHeight();
+
+        float x = 1;
+        if( items > columns ){
+            x = items/columns;
+            rows = (int) (x + 1);
+            totalHeight *= rows;
+        }
+
+        ViewGroup.LayoutParams params = gridView.getLayoutParams();
+        params.height = totalHeight;
+        gridView.setLayoutParams(params);
+
     }
 }
