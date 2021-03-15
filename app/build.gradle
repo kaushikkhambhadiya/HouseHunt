@@ -47,6 +47,7 @@ dependencies {
     implementation 'com.intuit.sdp:sdp-android:1.0.6' //  sdp size unit
     implementation 'com.mikhaellopez:circularimageview:3.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'// circle image view
+    implementation 'com.github.ParkSangGwon:TedPicker:v1.0.10' //MultiImage selector
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

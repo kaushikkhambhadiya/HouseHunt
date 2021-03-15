@@ -11,8 +11,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.conestoga.househunt.Fragments.FragmentTabsFavorite;
+import com.conestoga.househunt.Fragments.FragmentTabsListing;
 import com.conestoga.househunt.MainFragments.AboutFragment;
 import com.conestoga.househunt.MainFragments.HomeFragment;
+import com.conestoga.househunt.MainFragments.MyProfileFragment;
 import com.conestoga.househunt.utils.Tools;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -147,11 +150,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 toolbar.setTitle(getResources().getString(R.string.app_name));
                 break;
             case R.id.nav_listing:
-//                fragment = new FragmentTabsListing();
+                fragment = new FragmentTabsListing();
                 toolbar.setTitle(menuItem.getTitle());
                 break;
             case R.id.nav_favorites:
-//                fragment = new FragmentTabsFavorite();
+                fragment = new FragmentTabsFavorite();
                 toolbar.setTitle(menuItem.getTitle());
                 break;
             case R.id.nav_chat:
@@ -159,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 toolbar.setTitle(menuItem.getTitle());
                 break;
             case R.id.nav_profile:
-//                fragment = new MyProfileFragment();
+                fragment = new MyProfileFragment();
                 toolbar.setTitle(menuItem.getTitle());
                 break;
             case R.id.nav_logout:

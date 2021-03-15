@@ -1,30 +1,27 @@
 package com.conestoga.househunt;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.conestoga.househunt.Model.Property;
-import com.conestoga.househunt.utils.Tools;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -36,8 +33,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+import com.gun0912.tedpicker.Config;
+import com.gun0912.tedpicker.ImagePickerActivity;
 
-import java.io.IOException;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,14 +61,14 @@ public class UploadProperty extends AppCompatActivity {
     ProgressBar progressBar;
     public String imageId;
     ImageView ivback;
+    ArrayList<String> property_images;
+    LinearLayout llpropertyimages;
 
     Date currentTime;
 
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
 
-    public static final int TAKE_PIC_REQUEST_CODE = 0;
-    public static final int CHOOSE_PIC_REQUEST_CODE = 1;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
 
     //voice input request codes
@@ -77,6 +76,9 @@ public class UploadProperty extends AppCompatActivity {
     private static final int REQUEST_CODE_AVAILABLEFOR = 12;
     private static final int REQUEST_CODE_ADDRESS = 13;
     private static final int REQUEST_CODE_PRICE = 14;
+
+    private static final int INTENT_REQUEST_GET_IMAGES = 15;
+
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -99,6 +101,7 @@ public class UploadProperty extends AppCompatActivity {
         btnSubmit = findViewById(R.id.btnSubmit);
         progressBar = findViewById(R.id.progressBar);
         ivback = findViewById(R.id.ivback);
+        llpropertyimages = findViewById(R.id.llpropertyimages);
 
         ivback.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,28 +145,19 @@ public class UploadProperty extends AppCompatActivity {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
         }
         else{
-            //show dialog
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Upload or Take a photo");
-            builder.setPositiveButton("Upload", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //upload image
-                    Intent choosePictureIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                    choosePictureIntent.setType("image/*");
-                    startActivityForResult(choosePictureIntent, CHOOSE_PIC_REQUEST_CODE);
-                }
-            });
-            builder.setNegativeButton("Take Photo", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //take photo
-                    Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(takePicture, TAKE_PIC_REQUEST_CODE);
-                }
-            });
-            AlertDialog dialog = builder.create();
-            dialog.show();
+            //upload image
+            Config config = new Config();
+//            config.setCameraHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+            config.setSelectionMin(1);
+            config.setSelectionLimit(10);
+            config.setSelectedCloseImage(R.drawable.ic_check);
+            config.setSelectedBottomColor(R.color.colorPrimaryDark);
+
+            ImagePickerActivity.setConfig(config);
+
+            Intent intent  = new Intent(UploadProperty.this, ImagePickerActivity.class);
+            startActivityForResult(intent,INTENT_REQUEST_GET_IMAGES);
+
         }
     }
 
@@ -171,46 +165,44 @@ public class UploadProperty extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        assert data != null;
+        ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
         if(resultCode != RESULT_CANCELED) {
             switch (requestCode) {
-                case TAKE_PIC_REQUEST_CODE:
-                    if (resultCode == Activity.RESULT_OK && data != null)
-                    {
-                        Bitmap photo = (Bitmap) data.getExtras().get("data");
-                        imageURI = Tools.getImageUri(this,photo);
-                        imgProperty.setImageBitmap(photo);
-                    }
+                case INTENT_REQUEST_GET_IMAGES:
+                    ArrayList<Uri>  image_uris = data.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
 
-                    break;
-                case CHOOSE_PIC_REQUEST_CODE:
-                    if (resultCode == RESULT_OK && data != null) {
-                        imageURI = data.getData();
-                        try {
-                            Bitmap photo = MediaStore.Images.Media.getBitmap(getContentResolver(), imageURI);
-                            imgProperty.setImageBitmap(photo);
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                    //do something
+                    llpropertyimages.removeAllViews();
+
+                    for (int i=0; i < image_uris.size(); i++) {
+                        ImageView imageView = new ImageView(this);
+                        //setting image position
+                        imageView.setLayoutParams(new LinearLayout.LayoutParams(R.dimen._100sdp,
+                                R.dimen._100sdp));
+                        //adding view to layout
+                        if(imageView.getParent() != null) {
+                            ((ViewGroup)imageView.getParent()).removeView(imageView); // <- fix
                         }
+                        llpropertyimages.addView(imageView);
+                        Uri file = Uri.fromFile(new File(String.valueOf(image_uris.get(i))));
+                        Glide.with(this).load(file).into(imageView);
                     }
+
                     break;
-            }
-        }
-
-        if (resultCode == RESULT_OK)
-        {
-            // Populate the wordsList with the String values the recognition engine thought it heard
-            assert data != null;
-            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-
-            assert matches != null;
-            if (requestCode == REQUEST_CODE_TYPE){
-                txtType.setText(matches.get(0));
-            }else if (requestCode == REQUEST_CODE_AVAILABLEFOR){
-                txtAvailableFor.setText(matches.get(0));
-            }else if (requestCode == REQUEST_CODE_ADDRESS){
-                txtAddress.setText(matches.get(0));
-            }else if (requestCode == REQUEST_CODE_PRICE){
-                txtPrice.setText(matches.get(0));
+                case REQUEST_CODE_TYPE:
+                    txtType.setText(matches.get(0));
+                    break;
+                case REQUEST_CODE_AVAILABLEFOR:
+                    txtAvailableFor.setText(matches.get(0));
+                    break;
+                case REQUEST_CODE_ADDRESS:
+                    txtAddress.setText(matches.get(0));
+                    break;
+                case REQUEST_CODE_PRICE:
+                    txtPrice.setText(matches.get(0));
+                    break;
             }
         }
     }

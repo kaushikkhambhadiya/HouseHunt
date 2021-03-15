@@ -195,14 +195,27 @@
                         android:paddingLeft="@dimen/_15sdp"
                         android:paddingRight="@dimen/_15sdp"/>
 
-                    <ImageView
-                        android:id="@+id/imgProperty"
-                        android:layout_width="@dimen/_150sdp"
-                        android:layout_height="@dimen/_100sdp"
+                    <LinearLayout
+                        android:id="@+id/llpropertyimages"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
                         android:layout_gravity="center"
-                        android:padding="10sp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/logo"/>
+                        android:gravity="center"
+                        android:padding="10sp">
+
+                        <ImageView
+                            android:id="@+id/imgProperty"
+                            android:layout_width="@dimen/_150sdp"
+                            android:layout_height="@dimen/_100sdp"
+                            android:layout_gravity="center"
+                            android:padding="10sp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/logo"/>
+
+                    </LinearLayout>
+
+
 
                     <View
                         android:layout_width="0dp"

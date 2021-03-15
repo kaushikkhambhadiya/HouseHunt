@@ -62,9 +62,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyHolder> {
         holder.itemPrice.setText(Integer.toString(estateCurrent.getPrice()));
         holder.uploader_name.setText(estateCurrent.getUploader_name());
         holder.upload_date.setText(estateCurrent.getDateofpost());
-        Picasso.get().load(estateCurrent.getUploader_profile_pic()).fit().centerInside().into(holder.uploader_image);
 
         Picasso.get().load(estateCurrent.getImageId()).fit().centerInside().into(holder.itemImg);
+
+        if (!estateCurrent.getUploader_profile_pic().equals("null")){
+            Picasso.get().load(estateCurrent.getUploader_profile_pic()).fit().centerInside().into(holder.uploader_image);
+        }
 
         dbRef.orderByChild("dateofpost").equalTo(estateCurrent.getDateofpost())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
