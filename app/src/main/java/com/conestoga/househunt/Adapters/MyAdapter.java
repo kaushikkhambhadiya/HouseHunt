@@ -7,7 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.conestoga.househunt.BuildConfig;
+import com.conestoga.househunt.DisplayActivity;
+import com.conestoga.househunt.Interfaces.ItemClickListner;
 import com.conestoga.househunt.Model.Property;
 import com.conestoga.househunt.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,7 +23,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -63,11 +65,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyHolder> {
         holder.uploader_name.setText(estateCurrent.getUploader_name());
         holder.upload_date.setText(estateCurrent.getDateofpost());
 
-        Picasso.get().load(estateCurrent.getPropertyimages().get(0)).fit().centerInside().into(holder.itemImg);
+        Glide.with(mContext).load(estateCurrent.getPropertyimages().get(0)).into(holder.itemImg);
+//        Picasso.get().load(estateCurrent.getPropertyimages().get(0)).fit().centerInside().into(holder.itemImg);
 
         if (!estateCurrent.getUploader_profile_pic().equals("null")){
-            Picasso.get().load(estateCurrent.getUploader_profile_pic()).fit().centerInside().into(holder.uploader_image);
+//            Picasso.get().load(estateCurrent.getUploader_profile_pic()).fit().centerInside().into(holder.uploader_image);
+            Glide.with(mContext).load(estateCurrent.getUploader_profile_pic()).into(holder.uploader_image);
         }
+
+          holder.setItemClickListner(new ItemClickListner() {
+            @Override
+            public void onItemClickListner(View v, int position) {
+                Intent intent = new Intent(mContext, DisplayActivity.class);
+                intent.putExtra("property", estateCurrent);
+                mContext.startActivity(intent);
+            }
+        });
 
         dbRef.orderByChild("dateofpost").equalTo(estateCurrent.getDateofpost())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
