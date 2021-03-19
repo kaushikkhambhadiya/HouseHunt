@@ -5,19 +5,21 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.conestoga.househunt.Interfaces.ItemClickListner;
 import com.conestoga.househunt.R;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MyHolder extends RecyclerView.ViewHolder {
+public class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     TextView itemType, itemLocation, itemPrice;
     ImageView itemImg;
     CircularImageView uploader_image;
     ImageButton ivfav,ivshare,tvchat;
     TextView upload_date,uploader_name;
+    ItemClickListner itemClickListner;
 
     public MyHolder(@NonNull View itemView) {
         super(itemView);
@@ -33,8 +35,15 @@ public class MyHolder extends RecyclerView.ViewHolder {
         upload_date = (TextView) itemView.findViewById(R.id.upload_date);
         uploader_name = (TextView) itemView.findViewById(R.id.uploader_name);
 
-
+        itemView.setOnClickListener(this);
     }
 
+    @Override
+    public void onClick(View v) {
+        this.itemClickListner.onItemClickListner(v, getLayoutPosition());
+    }
 
+    public void setItemClickListner(ItemClickListner ic) {
+        this.itemClickListner = ic;
+    }
 }

@@ -37,6 +37,8 @@
             android:screenOrientation="portrait"
             />
 
+        <activity android:name=".DisplayActivity"/>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.conestoga.househunt"
