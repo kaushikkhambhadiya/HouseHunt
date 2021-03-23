@@ -95,7 +95,8 @@
                         android:theme="@style/EditText.Grey"
                         android:drawableRight="@drawable/ic_mic"
                         android:onClick="takevoiceinput"
-                        android:drawableEnd="@drawable/ic_mic" />
+                        android:drawableEnd="@drawable/ic_mic"
+                        android:imeOptions="actionNext" />
 
                     <View
                         android:layout_width="0dp"
@@ -124,7 +125,8 @@
                         android:theme="@style/EditText.Grey"
                         android:drawableRight="@drawable/ic_mic"
                         android:onClick="takevoiceinput"
-                        android:drawableEnd="@drawable/ic_mic" />
+                        android:drawableEnd="@drawable/ic_mic"
+                        android:imeOptions="actionNext"/>
 
                     <View
                         android:layout_width="0dp"

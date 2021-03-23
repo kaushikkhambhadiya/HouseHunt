@@ -15,6 +15,7 @@ import com.conestoga.househunt.Fragments.FragmentTabsFavorite;
 import com.conestoga.househunt.Fragments.FragmentTabsListing;
 import com.conestoga.househunt.MainFragments.AboutFragment;
 import com.conestoga.househunt.MainFragments.HomeFragment;
+import com.conestoga.househunt.MainFragments.MyMessagesFragment;
 import com.conestoga.househunt.MainFragments.MyProfileFragment;
 import com.conestoga.househunt.utils.Tools;
 import com.google.android.material.navigation.NavigationView;
@@ -158,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 toolbar.setTitle(menuItem.getTitle());
                 break;
             case R.id.nav_chat:
-//                fragment = new MyMessagesFragment();
+                fragment = new MyMessagesFragment();
                 toolbar.setTitle(menuItem.getTitle());
                 break;
             case R.id.nav_profile:

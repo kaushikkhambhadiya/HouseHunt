@@ -26,7 +26,6 @@ import androidx.appcompat.widget.Toolbar;
 public class DisplayActivity extends AppCompatActivity  implements BaseSliderView.OnSliderClickListener{
 
     Property property;
-//    byte[] mBytes;
     TextView mTitle, mLocation, mAvailable, mPrice;
     private SliderLayout slider;
     FirebaseAuth firebaseAuth;
@@ -60,8 +59,6 @@ public class DisplayActivity extends AppCompatActivity  implements BaseSliderVie
         Intent intent = getIntent();
         if (intent!=null){
             property = (Property) intent.getSerializableExtra("property");
-//            mBytes = getIntent().getByteArrayExtra("iImage");
-
 
             mTitle.setText(property.getType());
             SpannableString location = new SpannableString(property.getLocation());
@@ -119,6 +116,14 @@ public class DisplayActivity extends AppCompatActivity  implements BaseSliderVie
             }
         });
 
+        lyt_chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(DisplayActivity.this , ChatActivity.class);
+                intent1.putExtra("postdata",property);
+                startActivity(intent1);
+            }
+        });
 
     }
 
