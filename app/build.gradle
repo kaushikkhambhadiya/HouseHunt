@@ -42,12 +42,15 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.2.1' // material
     implementation 'com.balysv:material-ripple:1.0.2'                  // ripple effect
-    implementation 'com.squareup.picasso:picasso:2.71828' // image loader
+    implementation 'com.squareup.picasso:picasso:2.5.2' // image loader
     implementation 'com.github.bumptech.glide:glide:3.7.0'// image loader
     implementation 'com.intuit.sdp:sdp-android:1.0.6' //  sdp size unit
     implementation 'com.mikhaellopez:circularimageview:3.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'// circle image view
     implementation 'com.github.ParkSangGwon:TedPicker:v1.0.10' //MultiImage selector
+    //Image Slider
+    implementation 'com.nineoldandroids:library:2.4.0'
+    implementation 'com.daimajia.slider:library:1.1.5@aar'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

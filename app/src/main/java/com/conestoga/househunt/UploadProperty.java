@@ -234,6 +234,7 @@ public class UploadProperty extends AppCompatActivity {
             objProperty.setUploader_profile_pic(String.valueOf(user.getPhotoUrl()));
             objProperty.setUploader_email(user.getEmail());
 
+
             final ArrayList<String> image_list = new ArrayList<>();
             for (int i =0 ; i < image_uris.size(); i++) {
                 Uri uri = Uri.parse("file://"+image_uris.get(i));
@@ -275,38 +276,6 @@ public class UploadProperty extends AppCompatActivity {
                             }
                         });
             }
-//            StorageReference refStorage = strRef.child(imageId);
-//            taskStorage = refStorage.putFile(imageURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                @Override
-//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                    final Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
-//                    while (!urlTask.isSuccessful());
-//                    final Uri taskResult = urlTask.getResult();
-//                    final String downloadUrl = taskResult.toString();
-//
-//                    objProperty.setImageId(downloadUrl);
-//
-//                    dbReflisting.push().setValue(objProperty).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<Void> task) {
-//                            progressBar.setVisibility(View.VISIBLE);
-//                            Log.i("Listing","Complete");
-//                        }
-//                    });
-//
-//                    dbRef.push().setValue(objProperty).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<Void> task) {
-//                            progressBar.setVisibility(View.VISIBLE);
-//                            Toast.makeText(UploadProperty.this, "Upload Complete!", Toast.LENGTH_SHORT).show();
-//                            Intent intent = new Intent(UploadProperty.this, MainActivity.class);
-//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                            startActivity(intent);
-//                            finish();
-//                        }
-//                    });
-//                }
-//            });
         }
     }
 
