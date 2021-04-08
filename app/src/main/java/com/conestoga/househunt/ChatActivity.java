@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.conestoga.househunt.Adapters.ChatAdapter;
@@ -44,6 +46,8 @@ public class ChatActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private ArrayList<ChatMessage> chat_list;
     private ChatAdapter mAdapter;
+    HorizontalScrollView lldefaults;
+    TextView defaul1,defaul2 , defaul3,defaul4;
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -70,6 +74,12 @@ public class ChatActivity extends AppCompatActivity {
         chat_recycleview = findViewById(R.id.chat_recycleview);
         etmsg = findViewById(R.id.etmsg);
         btsend = findViewById(R.id.btsend);
+        lldefaults = findViewById(R.id.lldefaults);
+
+        defaul1 = findViewById(R.id.defaul1);
+        defaul2 = findViewById(R.id.defaul2);
+        defaul3 = findViewById(R.id.defaul3);
+        defaul4 = findViewById(R.id.defaul4);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -86,6 +96,13 @@ public class ChatActivity extends AppCompatActivity {
                         ChatMessage messageModel = postSnapshot.getValue(ChatMessage.class);
                         chat_list.add(messageModel);
                     }
+
+                    if (chat_list.size() > 0){
+                        lldefaults.setVisibility(View.GONE);
+                    }else {
+                        lldefaults.setVisibility(View.VISIBLE);
+                    }
+
                     mAdapter = new ChatAdapter(ChatActivity.this, chat_list);
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
                     chat_recycleview.setLayoutManager(mLayoutManager);
@@ -106,36 +123,68 @@ public class ChatActivity extends AppCompatActivity {
         btsend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String message_text = etmsg.getText().toString();
-                if (!message_text.equals("")) {
-                    Date today = new Date();
-                    SimpleDateFormat format = new SimpleDateFormat("dd MMM hh:mm a");
-                    String currentTime = format.format(today);
-                    ChatMessage message_model = new ChatMessage(user.getDisplayName(), message_text, currentTime);
-
-                    mDatabase.child(user.getUid()).child(postdata.getUserid()).child("sendto").setValue(postdata.getUploader_name());
-                    mDatabase.child(postdata.getUserid()).child(user.getUid()).child("sendto").setValue(user.getDisplayName());
-                    if (postdata.getUploader_profile_pic() == null){
-                        mDatabase.child(user.getUid()).child(postdata.getUserid()).child("senderimage").setValue("");
-                    }else {
-                        mDatabase.child(user.getUid()).child(postdata.getUserid()).child("senderimage").setValue(postdata.getUploader_profile_pic());
-
-                    }
-                    if (user.getPhotoUrl() == null){
-                        mDatabase.child(postdata.getUserid()).child(user.getUid()).child("senderimage").setValue("");
-                    }else {
-                        mDatabase.child(postdata.getUserid()).child(user.getUid()).child("senderimage").setValue(user.getPhotoUrl().toString());
-                    }
-                    mDatabase.child(user.getUid()).child(postdata.getUserid()).child("sendid").setValue(postdata.getUserid());
-                    mDatabase.child(postdata.getUserid()).child(user.getUid()).child("sendid").setValue(user.getUid());
-
-                    mDatabase.child(user.getUid()).child(postdata.getUserid()).child("messages").push().setValue(message_model);
-                    mDatabase.child(postdata.getUserid()).child(user.getUid()).child("messages").push().setValue(message_model);
-                    etmsg.setText("");
-                } else {
-                    Toast.makeText(ChatActivity.this, "Please Write Message before Send", Toast.LENGTH_SHORT).show();
-                }
+                String message_text = etmsg.getText().toString().trim();
+                SendMessage(message_text);
             }
         });
+
+        defaul1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendMessage(defaul1.getText().toString());
+            }
+        });
+
+        defaul2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendMessage(defaul2.getText().toString());
+            }
+        });
+
+        defaul3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendMessage(defaul3.getText().toString());
+            }
+        });
+
+        defaul4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendMessage(defaul4.getText().toString());
+            }
+        });
+    }
+
+    public void SendMessage(String message_text){
+        if (!message_text.equals("")) {
+            Date today = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("dd MMM hh:mm a");
+            String currentTime = format.format(today);
+            ChatMessage message_model = new ChatMessage(user.getDisplayName(), message_text, currentTime);
+
+            mDatabase.child(user.getUid()).child(postdata.getUserid()).child("sendto").setValue(postdata.getUploader_name());
+            mDatabase.child(postdata.getUserid()).child(user.getUid()).child("sendto").setValue(user.getDisplayName());
+            if (postdata.getUploader_profile_pic() == null){
+                mDatabase.child(user.getUid()).child(postdata.getUserid()).child("senderimage").setValue("");
+            }else {
+                mDatabase.child(user.getUid()).child(postdata.getUserid()).child("senderimage").setValue(postdata.getUploader_profile_pic());
+
+            }
+            if (user.getPhotoUrl() == null){
+                mDatabase.child(postdata.getUserid()).child(user.getUid()).child("senderimage").setValue("");
+            }else {
+                mDatabase.child(postdata.getUserid()).child(user.getUid()).child("senderimage").setValue(user.getPhotoUrl().toString());
+            }
+            mDatabase.child(user.getUid()).child(postdata.getUserid()).child("sendid").setValue(postdata.getUserid());
+            mDatabase.child(postdata.getUserid()).child(user.getUid()).child("sendid").setValue(user.getUid());
+
+            mDatabase.child(user.getUid()).child(postdata.getUserid()).child("messages").push().setValue(message_model);
+            mDatabase.child(postdata.getUserid()).child(user.getUid()).child("messages").push().setValue(message_model);
+            etmsg.setText("");
+        } else {
+            Toast.makeText(ChatActivity.this, "Please Write Message before Send", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -5,6 +5,20 @@
     android:layout_height="match_parent"
     tools:context=".MainFragments.MyMessagesFragment">
 
+    <TextView
+        android:id="@+id/tvnochat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="15sp"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:text="Chat history is empty."
+        android:textColor="@color/colorHighlight"
+        android:textStyle="bold"
+        android:textSize="@dimen/_20sdp"
+        android:visibility="gone"/>
+
     <!-- TODO: Update blank fragment layout -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chat_recycleview"

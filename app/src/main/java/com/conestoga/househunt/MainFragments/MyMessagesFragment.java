@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.conestoga.househunt.Adapters.MessagesListAdapter;
 import com.conestoga.househunt.Model.ChatMessage;
@@ -35,11 +36,11 @@ public class MyMessagesFragment extends Fragment {
     private ArrayList<SenderDetails> chat_history_list;
     private ArrayList<ChatMessage> chat_messages;
     MessagesListAdapter mAdapter;
+    TextView tvnochat;
 
     public MyMessagesFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,6 +55,7 @@ public class MyMessagesFragment extends Fragment {
         mDatabase = database.getReference("Chat_Room").child(user.getUid());
 
         chat_recycleview = main_view.findViewById(R.id.chat_recycleview);
+        tvnochat = main_view.findViewById(R.id.tvnochat);
 
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -91,6 +93,8 @@ public class MyMessagesFragment extends Fragment {
                             }
                         });
                     }
+                } else  {
+                    tvnochat.setVisibility(View.VISIBLE);
                 }
             }
 

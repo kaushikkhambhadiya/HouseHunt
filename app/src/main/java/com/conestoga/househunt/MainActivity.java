@@ -3,6 +3,7 @@ package com.conestoga.househunt;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,9 +19,13 @@ import com.conestoga.househunt.MainFragments.HomeFragment;
 import com.conestoga.househunt.MainFragments.MyMessagesFragment;
 import com.conestoga.househunt.MainFragments.MyProfileFragment;
 import com.conestoga.househunt.utils.Tools;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -42,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //creating fragment object
     Fragment fragment = null;
     boolean doubleBackToExitPressedOnce = false;
+
 
 
     //On Back Pressed the navigation drawer closes
@@ -101,6 +107,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         initToolbar();
         firebaseAuth = FirebaseAuth.getInstance();
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("TAG", "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+
+                        // Log and toast
+                        String msg = token;
+                        Log.d("TAG", msg);
+//                        sendNotificationId(msg);
+                    }
+                });
 
         //Navigation Drawer Menu
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(MainActivity.this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -177,6 +202,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragment = new AboutFragment();
                 toolbar.setTitle(menuItem.getTitle());
                 break;
+            case R.id.nav_donate:
+                Intent intent1 = new Intent(MainActivity.this,DonateActivity.class);
+                startActivity(intent1);
+                break;
+
         }
 
         //replacing the fragment

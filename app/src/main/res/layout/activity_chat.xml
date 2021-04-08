@@ -31,7 +31,86 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/_5sdp"
-            android:layout_above="@+id/line"/>
+            android:layout_above="@+id/lldefaults"/>
+
+    <HorizontalScrollView
+        android:id="@+id/lldefaults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:fillViewport="true"
+        android:layout_above="@+id/line">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/defaul1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10sp"
+                    android:layout_marginLeft="10sp"
+                    android:layout_marginTop="5sp"
+                    android:text="Hi there! "
+                    android:textColor="#A9A9A9"
+                    android:textSize="@dimen/_12sdp"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:background="@drawable/bg_chat_default"/>
+
+                <TextView
+                    android:id="@+id/defaul2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10sp"
+                    android:layout_marginLeft="10sp"
+                    android:layout_marginTop="5sp"
+                    android:text="Hi, is this available?"
+                    android:textColor="#A9A9A9"
+                    android:textSize="@dimen/_12sdp"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:background="@drawable/bg_chat_default"/>
+
+                <TextView
+                    android:id="@+id/defaul3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10sp"
+                    android:layout_marginLeft="10sp"
+                    android:layout_marginTop="5sp"
+                    android:text="Hi, is the price negotiable?"
+                    android:textColor="#A9A9A9"
+                    android:textSize="@dimen/_12sdp"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:background="@drawable/bg_chat_default"/>
+
+            <TextView
+                android:id="@+id/defaul4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                android:layout_marginLeft="10sp"
+                android:layout_marginTop="5sp"
+                android:text="Hi, when are you available to meet?"
+                android:textColor="#A9A9A9"
+                android:textSize="@dimen/_12sdp"
+                android:layout_margin="@dimen/_5sdp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:singleLine="true"
+            android:background="@drawable/bg_chat_default"/>
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
 
         <View
             android:id="@+id/line"

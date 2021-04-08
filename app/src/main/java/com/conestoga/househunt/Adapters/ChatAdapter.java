@@ -61,7 +61,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         ChatMessage message_model = chat_message_list.get(position);
         holder.message_text.setText(message_model.getMessage());
-        holder.tvusername.setText(message_model.getName());
         holder.tvtime.setText(message_model.getTime());
 
     }
@@ -73,12 +72,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView message_text,tvusername,tvtime;
+        public TextView message_text,tvtime;
 
         public MyViewHolder(View view) {
             super(view);
             message_text = (TextView) view.findViewById(R.id.tvmessage);
-            tvusername = (TextView) view.findViewById(R.id.tvusername);
             tvtime = (TextView) view.findViewById(R.id.tvtime);
         }
     }
