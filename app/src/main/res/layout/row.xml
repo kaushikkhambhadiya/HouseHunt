@@ -182,13 +182,13 @@
                     android:layout_weight="1" />
 
                 <ImageButton
-                    android:id="@+id/tvchat"
+                    android:id="@+id/ivdelete"
                     android:layout_width="?attr/actionBarSize"
                     android:layout_height="?attr/actionBarSize"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:tint="@color/grey_60"
-                    android:visibility="invisible"
-                    android:src="@drawable/ic_comment" />
+                    android:visibility="gone"
+                    android:src="@drawable/ic_delete" />
 
             </LinearLayout>
 

@@ -32,6 +32,8 @@ public class FragmentTabsListing extends Fragment {
     private MyAdapter myAdapter;
     private DatabaseReference databaseReference;
     FirebaseAuth firebaseAuth;
+    ArrayList<String> ids = new ArrayList();
+
 
     public FragmentTabsListing() {
     }
@@ -66,9 +68,12 @@ public class FragmentTabsListing extends Fragment {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Property upload = postSnapshot.getValue(Property.class);
                     properties.add(upload);
+                    ids.add(postSnapshot.getKey());//saving id of each child
+
                 }
-                myAdapter = new MyAdapter(getActivity(),properties);
+                myAdapter = new MyAdapter(getActivity(),properties,true,ids);
                 recyclerView.setAdapter(myAdapter);
+                myAdapter.notifyDataSetChanged();
             }
 
             @Override

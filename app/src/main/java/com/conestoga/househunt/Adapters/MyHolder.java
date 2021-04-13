@@ -17,7 +17,7 @@ public class MyHolder extends RecyclerView.ViewHolder implements View.OnClickLis
     TextView itemType, itemLocation, itemPrice;
     ImageView itemImg;
     CircularImageView uploader_image;
-    ImageButton ivfav,ivshare,tvchat;
+    ImageButton ivfav,ivshare,ivdelete;
     TextView upload_date,uploader_name;
     ItemClickListner itemClickListner;
 
@@ -31,7 +31,7 @@ public class MyHolder extends RecyclerView.ViewHolder implements View.OnClickLis
         uploader_image = (CircularImageView) itemView.findViewById(R.id.uploader_image);
         ivfav = (ImageButton) itemView.findViewById(R.id.ivfav);
         ivshare = (ImageButton) itemView.findViewById(R.id.ivshare);
-        tvchat = (ImageButton) itemView.findViewById(R.id.tvchat);
+        ivdelete = (ImageButton) itemView.findViewById(R.id.ivdelete);
         upload_date = (TextView) itemView.findViewById(R.id.upload_date);
         uploader_name = (TextView) itemView.findViewById(R.id.uploader_name);
 

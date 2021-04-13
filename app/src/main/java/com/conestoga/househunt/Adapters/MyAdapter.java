@@ -1,11 +1,14 @@
 package com.conestoga.househunt.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.conestoga.househunt.BuildConfig;
@@ -24,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -34,14 +38,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyHolder> {
 
     private Context mContext;
     private List<Property> mUploads;
+    private List<Property> mAllUploads;
     StorageReference storageReference;
     DatabaseReference dbRef;
+    DatabaseReference databaseReference;
     FirebaseUser user;
     FirebaseAuth firebaseAuth;
+    Boolean mismylisting = false;
+    ArrayList<String> ids = new ArrayList();
+    ArrayList<String> allids = new ArrayList();
 
-    public MyAdapter(Context context, List<Property> uploads) {
+    public MyAdapter(Context context, List<Property> uploads,Boolean ismylisting,  ArrayList<String> ids) {
         mContext = context;
         mUploads = uploads;
+        mismylisting = ismylisting;
+        this.ids = ids;
     }
 
     @NonNull
@@ -52,11 +63,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyHolder holder, final int position) {
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
-        dbRef = FirebaseDatabase.getInstance().getReference(user.getUid()).child("FavListing");
+
 
         final Property estateCurrent = mUploads.get(position);
         holder.itemType.setText(estateCurrent.getType());
@@ -64,6 +75,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyHolder> {
         holder.itemPrice.setText(Integer.toString(estateCurrent.getPrice()));
         holder.uploader_name.setText(estateCurrent.getUploader_name());
         holder.upload_date.setText(estateCurrent.getDateofpost());
+
+        if (user.getEmail().equals(estateCurrent.getUploader_email())){
+            holder.ivfav.setVisibility(View.GONE);
+            dbRef = FirebaseDatabase.getInstance().getReference(user.getUid()).child("MyListing");
+        } else {
+            holder.ivfav.setVisibility(View.VISIBLE);
+            dbRef = FirebaseDatabase.getInstance().getReference(user.getUid()).child("FavListing");
+        }
+
+        if (mismylisting){
+            holder.ivdelete.setVisibility(View.VISIBLE);
+        }else {
+            holder.ivdelete.setVisibility(View.GONE);
+        }
 
         Glide.with(mContext).load(estateCurrent.getPropertyimages().get(0)).into(holder.itemImg);
 //        Picasso.get().load(estateCurrent.getPropertyimages().get(0)).fit().centerInside().into(holder.itemImg);
@@ -96,6 +121,25 @@ public class MyAdapter extends RecyclerView.Adapter<MyHolder> {
 
                     }
                 });
+
+         databaseReference = FirebaseDatabase.getInstance().getReference("AllProperty");
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mAllUploads = new ArrayList<>();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Property upload = postSnapshot.getValue(Property.class);
+                    mAllUploads.add(upload);
+                    allids.add(postSnapshot.getKey());//saving id of each child
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(mContext, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
         holder.ivshare.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,7 +177,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyHolder> {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             Log.i("Listing","Complete");
                                             holder.ivfav.setColorFilter(ContextCompat.getColor(mContext, R.color.red), android.graphics.PorterDuff.Mode.MULTIPLY);
-
                                         }
                                     });
                                 }
@@ -146,10 +189,58 @@ public class MyAdapter extends RecyclerView.Adapter<MyHolder> {
                         });
             }
         });
+
+
+        holder.ivdelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog diaBox = AskOption(position);
+                diaBox.show();
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return mUploads.size();
+    }
+
+    private AlertDialog AskOption(final int pos)
+    {
+        AlertDialog myQuittingDialogBox = new AlertDialog.Builder(mContext)
+                // set message, title, and icon
+                .setTitle("Are you sure?")
+                .setMessage("Do you want to Delete this Property ?")
+                .setIcon(R.drawable.ic_delete)
+
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //your deleting code
+//                        for (Property property : mAllUploads) {
+//                            // Loop arrayList1 items
+//                            boolean found = false;
+//                            for (Property property1 : m) {
+//                                if (person2.id == person1.id) {
+//                                    found = true;
+//                                }
+//                            }
+//                        }
+                        dbRef.child(ids.get(pos)).removeValue();
+                        mUploads.clear();
+                        dialog.dismiss();
+
+                    }
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+
+                    }
+                })
+                .create();
+
+        return myQuittingDialogBox;
     }
 }

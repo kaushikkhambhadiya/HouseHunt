@@ -29,6 +29,7 @@ public class HomeFragment extends Fragment {
     private List<Property> properties;
     private MyAdapter myAdapter;
     private DatabaseReference databaseReference;
+    ArrayList<String> ids = new ArrayList();
 
     public HomeFragment() {
         // Required empty public constructor
@@ -51,8 +52,9 @@ public class HomeFragment extends Fragment {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Property upload = postSnapshot.getValue(Property.class);
                     properties.add(upload);
+                    ids.add(postSnapshot.getKey());//saving id of each child
                 }
-                myAdapter = new MyAdapter(getActivity(),properties);
+                myAdapter = new MyAdapter(getActivity(),properties,false, ids);
                 recyclerView.setAdapter(myAdapter);
             }
 
