@@ -20,6 +20,7 @@ import org.json.JSONException;
 import java.math.BigDecimal;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class DonateActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -29,6 +30,13 @@ public class DonateActivity extends AppCompatActivity implements View.OnClickLis
 
     //Payment Amount
     private String paymentAmount;
+    Toolbar toolbar;
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
 
     //Paypal intent request code to track onActivityResult method
@@ -41,10 +49,17 @@ public class DonateActivity extends AppCompatActivity implements View.OnClickLis
             .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
             .clientId(PayPalConfig.PAYPAL_CLIENT_ID);
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_donate);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Donate to Kids");
 
         buttonPay = (Button) findViewById(R.id.buttonPay);
         editTextAmount = (EditText) findViewById(R.id.editTextAmount);
