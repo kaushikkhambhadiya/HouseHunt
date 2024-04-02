@@ -16,7 +16,7 @@ Welcome to HouseHunt, your ultimate solution for property management whether you
 
 ## Screenshots
 
-![Screenshot 1](screenshot1.png)
+![Screenshot 1](https://play-lh.googleusercontent.com/Loq0gcrWrv-7_N_eCK-lfxM7reL2mBtkIKnolyP7nzmDnPe-E6JNClgKF7GnllMUuw=w5120-h2880-rw)
 ![Screenshot 2](screenshot2.png)
 ![Screenshot 3](screenshot3.png)
 
@@ -36,9 +36,6 @@ Welcome to HouseHunt, your ultimate solution for property management whether you
 
 Contributions are welcome! If you have any ideas, suggestions, or improvements, feel free to open an issue or submit a pull request.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
@@ -47,8 +44,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## About the Developer
 
-This project is maintained by [Your Name]. Connect with me on [LinkedIn](https://www.linkedin.com/in/yourprofile/) for any inquiries or collaborations.
-
----
-
-Feel free to customize this README to suit your project's specific needs and branding. Happy coding! 🏡✨
+This project is maintained by Kaushik Khambhadiya. Connect with me on [LinkedIn](https://www.linkedin.com/in/kaushikkhambhadiya/) for any inquiries or collaborations.
