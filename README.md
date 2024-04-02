@@ -17,8 +17,12 @@ Welcome to HouseHunt, your ultimate solution for property management whether you
 ## Screenshots
 
 ![Screenshot 1](https://play-lh.googleusercontent.com/Loq0gcrWrv-7_N_eCK-lfxM7reL2mBtkIKnolyP7nzmDnPe-E6JNClgKF7GnllMUuw)
-![Screenshot 2](screenshot2.png)
-![Screenshot 3](screenshot3.png)
+![Screenshot 2](https://play-lh.googleusercontent.com/_uI3_sad_W6aT83X7aq_lffiDn5L9fPzfJ-Z8CI4PNveUtrYnHbskbwX74xbEBtKGzI)
+![Screenshot 3](https://play-lh.googleusercontent.com/ia-k4u9ml6pBbjaXsH_7jj_Ovy2EG8P92c6yrjKEPPsCarAtpaJnrPOLKjuovNiPvw)
+![Screenshot 4](https://play-lh.googleusercontent.com/Rh4HOv4WJRwVYKVCg1Q-dwUS-vul-XrBieNlv-rmzWoBLPeoNlmGpshWzJcDp8kcVQ)
+![Screenshot 5](https://play-lh.googleusercontent.com/TptBFUgQCVj__gERUW3vFHTPPssMbf_fgc9y6gl1s2ufpNusjDiCY8mRiwRexNfrKls)
+![Screenshot 6](https://play-lh.googleusercontent.com/XUPunA_QRWcjtK90f6RjXq1KpGVXM6zIjUx9pIDHaPqphvBtya0HMS2Tnoou590l3ZvC)
+![Screenshot 7](https://play-lh.googleusercontent.com/BwPLtBAlm8myWn_5_VnppxkEnew5I1tiyAy8Mx8BydQlbx1L0alw_SuHr7Ml5jJ2sQ)
 
 ## How to Use
 
