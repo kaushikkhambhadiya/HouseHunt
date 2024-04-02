@@ -16,7 +16,7 @@ Welcome to HouseHunt, your ultimate solution for property management whether you
 
 ## Screenshots
 
-![Screenshot 1](https://play-lh.googleusercontent.com/Loq0gcrWrv-7_N_eCK-lfxM7reL2mBtkIKnolyP7nzmDnPe-E6JNClgKF7GnllMUuw=w5120-h2880-rw)
+![Screenshot 1](https://play-lh.googleusercontent.com/Loq0gcrWrv-7_N_eCK-lfxM7reL2mBtkIKnolyP7nzmDnPe-E6JNClgKF7GnllMUuw)
 ![Screenshot 2](screenshot2.png)
 ![Screenshot 3](screenshot3.png)
 
